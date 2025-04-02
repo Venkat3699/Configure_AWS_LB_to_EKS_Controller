@@ -1,4 +1,4 @@
-Pre-requisites:																		kubernetes.io/role/elb:1
+Pre-requisites:																		
 ==============
 1. Create an EKS Cluster
 2. Create an IAM Identity and Access Management (IAM) OpenID Connect (OIDC) provider for your cluster
