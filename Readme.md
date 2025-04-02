@@ -64,7 +64,7 @@ Pre-requisites:																		kubernetes.io/role/elb:1
 Doc Ref: https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html
 
 #### Step-1: EKS Cluster Setup
-	- The code is in the GitHub Repo: 
+- The code is in the GitHub Repo: 
 	```
 	https://github.com/Venkat3699/EKS_Terraform.git
 
@@ -80,51 +80,51 @@ Doc Ref: https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html
 	- click on Add provider
 	
 #### Step-3: Policy Creation		
-	- (Another URL: https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/v2.12.0/docs/install/iam_policy.json)
+- (Another URL: https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/v2.12.0/docs/install/iam_policy.json)
 
-	- The Policy is in this URL: https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.12.0/docs/install/iam_policy.json
+- The Policy is in this URL: https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.12.0/docs/install/iam_policy.json
 
-	- Go to IAM Console
-	- Click on policies:
-		- Click on Create policy
-		- Select Json format
-		- Paste the policy which is copied from above URL
-		- Click on Next
-		- policy Name: albController
-		- Click on create policy
+- Go to IAM Console
+- Click on policies:
+	- Click on Create policy
+	- Select Json format
+	- Paste the policy which is copied from above URL
+	- Click on Next
+	- policy Name: albController
+	- Click on create policy
 		
 #### Step-4: Role Creation
-	- Go to IAM Console
-	- Click on Roles:
-		- click on Create Role
-		- Select Web Identity
-		- Identity provider: select our above created Identity Provider
-		- Audience: sts.amazonaws.com
-		- Click on Next
-		- Select the Custom Created policy: albController
-		- Click on Next
-		- Role Name: EKS-albControllerRole
-		- Click on Create Role
+- Go to IAM Console
+- Click on Roles:
+	- click on Create Role
+	- Select Web Identity
+	- Identity provider: **select our above created Identity Provider**
+	- Audience: **sts.amazonaws.com**
+	- Click on Next
+	- Select the Custom Created policy: **albController**
+	- Click on Next
+	- Role Name: **EKS-albControllerRole**
+	- Click on Create Role
 		
-	- Click on the Role Name: EKS-albControllerRole
-		- Click on Trust Relationship
-		- Click on edit trust policy
-		- Add this line: (Make sure to check OIDC code: A20B838FB661493BA9F9CE719C9A8021)
-			"oidc.eks.ap-south-1.amazonaws.com/id/A20B838FB661493BA9F9CE719C9A8021:sub": "system:serviceaccount:kube-system:aws-load-balancer-controller",
-		- Click on Update Policy
-		- Copy the Role ARN (arn:aws:iam::682033479178:role/EKS-albControllerRole)
+- Click on the Role Name: EKS-albControllerRole
+	- Click on Trust Relationship
+	- Click on edit trust policy
+	- Add this line: (Make sure to check OIDC code: A20B838FB661493BA9F9CE719C9A8021)
+		"oidc.eks.ap-south-1.amazonaws.com/id/A20B838FB661493BA9F9CE719C9A8021:sub": "system:serviceaccount:kube-system:aws-load-balancer-controller",
+	- Click on Update Policy
+	- Copy the Role ARN (arn:aws:iam::682033479178:role/EKS-albControllerRole)
 
 #### Step-5: Service Account Creation on EKS Cluster
 ```
-		kubectl apply -f service_account.yml
-		kubectl describe serviceaccount aws-load-balancer-controller -n kube-system (check the role is attached correctly or not)
+	kubectl apply -f service_account.yml
+	kubectl describe serviceaccount aws-load-balancer-controller -n kube-system (check the role is attached correctly or not)
 ```		
 #### Step-6: Install AWS LB Contoller:
 ```
 	helm repo add eks https://aws.github.io/eks-charts
 	helm repo update eks
 ```
-	- Configuring AWS Load Balancer Controller
+- Configuring AWS Load Balancer Controller
 ```
 	helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 	   -n kube-system \
@@ -137,20 +137,24 @@ Doc Ref: https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html
 ```	   
 	kubectl get deployment -n kube-system aws-load-balancer-controller
 ```	
-	- We have successfully created the AWS LB Controller, we can deploy the ingress 
+- We have successfully created the AWS LB Controller, we can deploy the ingress 
 	
 #### Step-7: Deploy the Ingress 
-	- kubectl apply -f deployment.yml		  
-	- kubectl get ingress -A\
+```
+	kubectl apply -f deployment.yml		  
+	kubectl get ingress -A\
+```
 	
 #### Step-8: Check Load Balancer is Created or Not
-	- Go to EC2 console
-	- Click on Load Balancer
-	- Check the DNS name is same or not
-	- Access the application using DNS name
+- Go to EC2 console
+- Click on Load Balancer
+- Check the DNS name is same or not
+- Access the application using DNS name
 	
 #### Step-9: To delete all the resources
-	- kubectl delete -f deployment.yml
-	- kubectl delete -f service_account.yml
-	- helm uninstall aws-load-balancer-controller -n kube-system
-	- terraform destroy --auto-approve
+```
+	kubectl delete -f deployment.yml
+	kubectl delete -f service_account.yml
+	helm uninstall aws-load-balancer-controller -n kube-system
+	terraform destroy --auto-approve
+```
