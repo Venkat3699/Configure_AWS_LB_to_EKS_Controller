@@ -1,0 +1,70 @@
+# Namespace Manifest file
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eks-sample-app
+  labels:
+    name: eks-sample-app
+---
+# Deployment Manifest file
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginxapp
+  namespace: eks-sample-app
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "500Mi"
+            cpu: "1"
+        ports:
+        - containerPort: 80
+---
+# Service Manifest file
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginxsvc
+  namespace: eks-sample-app
+spec:
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+---  
+# Creating Ingress manifest file
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  namespace: eks-sample-app
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/tags: Name=devops-subnet-1,Name=devops-subnet-0
+spec:
+  ingressClassName: alb
+  rules:
+      - http:
+         paths:
+          - path: /
+            pathType: Exact
+            backend:
+              service:
+                name: nginxsvc    # Servcie Name
+                port:
+                  number: 80
