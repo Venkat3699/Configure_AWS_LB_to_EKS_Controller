@@ -64,17 +64,20 @@ Pre-requisites:																		kubernetes.io/role/elb:1
 Doc Ref: https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html
 
 #### Step-1: EKS Cluster Setup
-	- The code is in the GitHub Repo: https://github.com/Venkat3699/EKS_Terraform.git
-	
+	- The code is in the GitHub Repo: 
+	```
+	https://github.com/Venkat3699/EKS_Terraform.git
+
+	```
 #### Step-2: IAM OpenID Connect	
-	- Copy the EKS Cluster OIDC URL (Click on EKS Cluster Name --> Overview -> OpenID Connect provider URL)
-	- Go to IAM Console
-	- Click on Identity provider:
-		- Click on Add provider	
-		- Select OpenID connect 
-		- Provide URL which is copied from EKS 
-		- Audience: sts.amazonaws.com
-		- click on Add provider
+- Copy the EKS Cluster OIDC URL (Click on EKS Cluster Name --> Overview -> OpenID Connect provider URL)
+- Go to IAM Console
+- Click on Identity provider:
+	- Click on Add provider	
+	- Select OpenID connect 
+	- Provide URL which is copied from EKS 
+	- Audience: sts.amazonaws.com
+	- click on Add provider
 	
 #### Step-3: Policy Creation		
 	- (Another URL: https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/v2.12.0/docs/install/iam_policy.json)
